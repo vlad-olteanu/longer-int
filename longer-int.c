@@ -271,8 +271,6 @@ int mul_lint(LINT*a,LINT*b)
 	{
 		return 0;
 	}
-	//print_lint_polynomial_extra(a);//dbg
-	//print_lint_polynomial_extra(b);//dbg
 
 	unsigned char sign=a->sign^b->sign;
 
@@ -280,8 +278,6 @@ int mul_lint(LINT*a,LINT*b)
 	{
 		return 0;
 	}
-
-	//print_lint_polynomial_extra(a);//dbg
 
 	a->sign=sign;
 	return 1;
@@ -321,12 +317,9 @@ int mul_lint_abs(LINT*a,LINT*b)
 					retcode=0;
 					goto end;
 				}
-				//print_lint_polynomial_extra(a);//dbg
 			}
 			if(aux.highpart)
 			{
-				//printf("%llu\n",aux.highpart);//dbg
-				//print_lint_polynomial_extra(a);//dbg
 				if(add_coefficient(c,n+1,aux.highpart)==0)
 				{
 					retcode=0;
@@ -896,8 +889,6 @@ int add_coefficient(LINT*target,unsigned long long degree,unsigned int number)
 	}
 	if(degree>=target->used_size)
 	{
-		//print_lint_polynomial_extra(target);//dbg
-		//printf("%d %u \n\n",degree,number);//dbg
 		target->used_size=degree+1;
 	}
 	SPLIT_LL x;
@@ -1337,7 +1328,6 @@ int init_lint_str(LINT*target,char*string)
 				goto end;
 			}
 
-			//print_lint_polynomial_extra(aux);//dbg
 			///result+=aux
 			res=add_lint(result,aux);
 			if(!res)
@@ -1345,8 +1335,6 @@ int init_lint_str(LINT*target,char*string)
 				retcode=0;
 				goto end;
 			}
-			//print_lint_polynomial_extra(result);//dbg
-			//printf("\n");//dbg
 		}
 		if(string[0]=='-')
 		{
@@ -1355,7 +1343,6 @@ int init_lint_str(LINT*target,char*string)
 		///pointer incrementation
 		string++;
 	}
-	//printf("\n\n\n");//dbg
 	end:
 	if(retcode==1)
 	{
@@ -1579,9 +1566,8 @@ char* lint_itoa(LINT* target)
 		goto end;
 	}
 	///while aux_target!=0
-	while(!(aux_target->used_size==1&&aux_target->x[0]==0))
+	do
 	{
-		//printf("da %d %s\n",result_iterator,result);//dbg
 		result_iterator++;
 		if(result_iterator>=result_size-1)
 		{
@@ -1613,7 +1599,6 @@ char* lint_itoa(LINT* target)
 			goto end;
 		}
 		result[result_iterator]=aux_mod->x[0]+'0';
-
 		//aux_target/=10
 		res=div_lint(aux_target,ten);
 		if(res==0)
@@ -1621,7 +1606,7 @@ char* lint_itoa(LINT* target)
 			ok=0;
 			goto end;
 		}
-	}
+	}while(!(aux_target->used_size==1&&aux_target->x[0]==0));
 
 	if(aux_target->sign)
 	{
@@ -1636,7 +1621,7 @@ char* lint_itoa(LINT* target)
 	}
 
 	//reversing the string
-	for(unsigned long long i=0;i<result_iterator/2;i++)
+	for(unsigned long long i=0;i<=result_iterator/2;i++)
 	{
 		char aux=result[i];
 		result[i]=result[result_iterator-i];
